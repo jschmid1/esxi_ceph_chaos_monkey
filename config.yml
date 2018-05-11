@@ -1,0 +1,39 @@
+mode: 'async' # (async is in development)
+# available modes are:
+# sync, async, mixed
+#
+# Logging
+LOG_LEVEL_CONSOLE: 'info'
+LOG_LEVEL_FILE: 'debug'
+LOG_LEVEL: 'info'
+LOG_FILE_PATH: 'chaos.log'
+
+# vshpere 
+host: "10.162.186.115"
+user: "root"
+password: "replace_me"
+dc_name: "Datacenter"
+cluster_name: "Openstack"
+esxi_hosts: ["10.162.186.111"]
+template_vm_name: "ceph_template_vm"
+
+# Ceph Admin
+ceph_adm_node: "blueshark1.arch.suse.de"
+ceph_adm_user: "root"
+ceph_adm_password: "replace_me"
+
+# Gateways
+gateways: ['blueshark2.arch.suse.de']
+gateway_user: "root"
+gateway_password: "replace_me"
+ds_names: ["iscsi_testing_1", "iscsi_testing_2"]
+
+# General settings
+filter_string: "ceph_"
+max_vms: 5
+max_tasks: 10
+wait_for_health_ok_t: 360
+force_reboot: False
+max_down_osds_ratio: 0.2
+MAX_DEPTH: 15
+chaos_rate: 500
