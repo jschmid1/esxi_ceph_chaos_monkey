@@ -15,7 +15,7 @@ from config import Config
 from utils import _setup_logging, Utils, SshUtil
 from vmwareops import VMwareOps
 from ops import Ops
-from thread import BaseThread
+from thread import start_thread
 
 log = logging.getLogger(__name__)
 
@@ -59,7 +59,7 @@ class Runner(Config):
             sys.exit(1)
         self.ops.get_vm_list()
         self.ops.overall_tasks(silent=False)
-        # Danger zone.. Remove after
+        # Danger zone.. Remove after development
         if self.ops.queue.task_count >= 50:
             self.ops.queue.cancel_all_tasks()
 
@@ -74,9 +74,9 @@ class Runner(Config):
         if self.mode == 'mixed':
             log.warning(Fore.YELLOW + " * You are running in mixed mode. Tasks will be put in a queue up to 'max_queue' and are subsequently processed until the queue is empty ( UNDER DEVELOPMENT )")
 
-        if not self.vmwareops.health_ok():
-            log.critical(Fore.RED + "Your vmwarecluster cluster is not in HEALTH_OK state.")
-            sys.exit(1)
+        #if not self.vmwareops.health_ok():
+        #    log.critical(Fore.RED + "Your vmwarecluster cluster is not in HEALTH_OK state.")
+        #    sys.exit(1)
 
         if not self.cephops.health_ok(silent=False):
             log.critical(Fore.RED + "Your ceph cluster is not in HEALTH_OK state.")
@@ -108,14 +108,6 @@ class Runner(Config):
             for osd_id in self.cephops.out_osds:
                 self.cephops.mark_osd(osd_id, 'in')
 
-    def dummy_callback(self):
-        print("0------------------0-0-----------0-0-0-")
-        print("0------------------0-0-----------0-0-0-")
-        print("0------------------0-0-----------0-0-0-")
-        print("0------------------0-0-----------0-0-0-")
-        print("0------------------0-0-----------0-0-0-")
-        print("0------------------0-0-----------0-0-0-")
-
     def destroy_vms(self, count=0):
         # If a new VM gets added to the .vms list, it will be appended.
         # Which means that it will be appended to the end of the list.
@@ -133,14 +125,10 @@ class Runner(Config):
         # print summary
         print("Dummy method to collect logs")
 
+
     def stress_test(self):
         self.startup()
         abort = False
-#        thread = BaseThread(
-#                     name='test',
-#                     target=self.cephops.wait_for_health_ok,
-#                     callback=self.dummy_callback)
-#        thread.start()
         while not abort:
             self.ops.queue.wait_for_any_finished_task()
             self.print_header()
@@ -180,7 +168,6 @@ class Runner(Config):
             
         if abort:
             self.teardown()
-
 def main():
     # For colorama
     init(autoreset=True)
@@ -190,4 +177,7 @@ def main():
     Runner().stress_test()
 
 if __name__ == '__main__':
+    thread = start_thread()
+    thread.start()
+    ## sooo this does not detatch..
     main()

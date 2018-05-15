@@ -4,7 +4,6 @@ from config import Config
 from utils import Utils
 from colorama import Fore, Style
 
-
 log = logging.getLogger(__name__)
 
 
@@ -73,7 +72,7 @@ class Queue(Config):
                 info = ""
                 if self.task_count > self.max_tasks:
                     info = "{} to go".format(self.task_count - self.max_tasks)
-                log.info("Task ended successfully - {} tasks in still in queue. {}".format(self.task_count, info))
+                log.info("Task ended successfully - {} tasks still in queue. {}".format(self.task_count, info))
             if task.info.state == 'error':
                 # What to do best in that case?
                 # Sum them up and fail on a certain count?
@@ -95,5 +94,3 @@ class Queue(Config):
                 log.info("\n")
                 log.info(Fore.RED + "Encoutered an error in task {}".format(task))
                 task_done = True
-
-

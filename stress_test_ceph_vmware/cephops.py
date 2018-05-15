@@ -1,6 +1,7 @@
 import ast
 import logging
 import random
+import time
 from colorama import Fore, Style
 from config import Config
 from utils import SshUtil, Utils
@@ -14,7 +15,8 @@ class CephOps(Config):
         self.client = SshUtil(self.ceph_adm_node,
                               self.ceph_adm_user,
                               self.ceph_adm_password)
-        self.utl = Utils(label="Waiting for HEALTH_OK ({}s)".format(self.wait_for_health_ok_t))
+        self.utl = Utils(label="Waiting for {} ({}s)".format(self.ceph_health_is_ok_with,
+                                                             self.wait_for_health_ok_t))
         self.down_osds = self.get_down_osds()
         self.out_osds = self.get_out_osds()
         self.osds = self.get_osd_ids()
@@ -25,7 +27,7 @@ class CephOps(Config):
 
     def health_ok(self, silent=True):
         stdout, _ = self.client.run_cmd('ceph health')
-        if stdout == "HEALTH_OK":
+        if stdout.startswith(self.ceph_health_is_ok_with):
             if silent:
                 log.debug("Health is ok")
             else:
@@ -77,7 +79,7 @@ class CephOps(Config):
         return len(self.out_osds)
 
     def wait_for_health_ok(self, silent=True):
-        """Wait for $timeout until ceph cluster is back to HEALTH_OK again
+        """Wait for $timeout until ceph cluster is back to HEALTH_OK/WARN again
         """
         start = time.time()
         timeout = start + self.wait_for_health_ok_t

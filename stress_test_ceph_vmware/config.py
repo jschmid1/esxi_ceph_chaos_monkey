@@ -29,6 +29,7 @@ class Config(object):
         self.cluster_name = self.cnt.get('cluster_name', 'Openstack')
         self.filter_string = self.cnt.get('filter_string', 'ceph_')
         self.template_vm_name = self.cnt.get('template_vm_name', '')
+        self.ceph_health_is_ok_with = self.cnt.get('ceph_health_is_ok_with', 'HEALTH_OK')
         self.max_vms = int(self.cnt.get('max_vms', 5))
         self.chaos_rate = int(self.cnt.get('chaos_rate', 500))
         self.wait_for_health_ok_t = int(self.cnt.get('wait_for_health_ok_t', 360))
