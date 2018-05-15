@@ -47,26 +47,45 @@ python3 stress_test_vmware_ceph/main.py
 Configuration
 *****************
 
-Fill the config.yml with the required information.
+There are 2 modes available currently.
 
 .. code-block:: yaml
 
     mode: 'async' 
     # available modes are:
-    # sync, async, mixed
-    #
+    # sync, async
+    
+Sync is a 'blocking' mode where one operation is executed at a time.
+Async is based on a task_queue and queues up `max_tasks`.
+
+
+.. code-block:: yaml
+
+    max_tasks: 10
+
+.. code-block:: yaml
+
     # Logging
     LOG_LEVEL_CONSOLE: 'info'
     LOG_LEVEL_FILE: 'debug'
     LOG_LEVEL: 'info'
     LOG_FILE_PATH: 'chaos.log'
+    
+Standard Logging information
 
-    # vshpere 
+.. code-block:: yaml
+
+    # vshpere v-center
     host: "10.162.186.115"
     user: "root"
     password: "replace_me"
     dc_name: "Datacenter"
     cluster_name: "Openstack"
+    
+Migration can only be performed if there are multiple ( `esxi_hosts` or `ds_names` )
+
+.. code-block:: yaml
+
     esxi_hosts: ["10.162.186.111"]
     template_vm_name: "ceph_template_vm"
 
@@ -84,56 +103,44 @@ Fill the config.yml with the required information.
     # General settings
     filter_string: "ceph_"
     max_vms: 6
-    max_tasks: 10
-    wait_for_health_ok_t: 360
-    force_reboot: False
-    max_down_osds_ratio: 0.2
-    MAX_DEPTH: 15
-    chaos_rate: 500
-
-****************
-Validations
-****************
-
-Rebooting of a gateway will be disabled if you don't have more than one gateway defined in your configuration.
-You can change that behavior by setting `force_reboot` to True.
-
-----------
-
-Migration can only be performed if there are multiple ( `esxi_hosts` or `ds_names` )
-
------------
-
-All you nodes (ceph admin node, gateways, vmware hosts, vcenter) need to be up and running before the stress test starts
-
------------
-
-The ammount of OSDs that will be taken down out/down is somewhat computed. The default is 20% based on.
-
-`osd_count * 0.2`
-
-You can change that 0.2 value with the `max_down_osds_ratio` config value
-
------------
-
+    
 You can configure the amount of VMs spawned at the same point of time.
 ( You might want this if your vmware host is not _too_ strong, or you have other 
 workload running at the same time.
 Use `max_vms` for this.
 
+   
+Rebooting of a gateway will be disabled if you don't have more than one gateway defined in your configuration.
+You can change that behavior by setting `force_reboot` to True.
 
-*****************
-Modes
-*****************
+.. code-block:: yaml
 
-There are 2(3) modes available currently.
+    force_reboot: False
+The ammount of OSDs that will be taken down out/down is computed. The default is 20% based on.
 
-  - sync:
+`osd_count * 0.2`
 
-  - async:
-  - mixed:
+That means that 20% of all your OSDs are allowed to go down before the program adds them back in.
+
+You can change that 0.2 value with the `max_down_osds_ratio` config value
+
+.. code-block:: yaml
+
+    max_down_osds_ratio: 0.2
+    MAX_DEPTH: 15
+    chaos_rate: 500
+    wait_for_health_ok_t: 360
+    
+If Ceph is in a dirty/rebalancing state, this tool tries to wait for the cluster to be rebalanced.
+Use `wait_for_health_ok_t` to adjust in case you have a smaller/bigger cluster.
+
+****************
+Validations
+****************
 
 
+All your nodes (ceph admin node, gateways, vmware hosts, vcenter) need to be up and running before the stress test starts
+Tasks will be re-populated when you re-run this tool.
 
 
 *****************
