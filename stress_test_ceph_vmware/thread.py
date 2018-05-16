@@ -3,6 +3,10 @@ import time
 import sys
 from cephops import CephOps
 
+"""
+That's experimental and is not used currently
+"""
+
 class BaseThread(threading.Thread):
     def __init__(self, callback=None, callback_args=None, *args, **kwargs):
         target = kwargs.pop('target')

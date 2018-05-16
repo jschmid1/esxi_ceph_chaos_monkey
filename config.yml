@@ -1,4 +1,4 @@
-mode: 'async' # (async is in development)
+mode: 'async' 
 # available modes are:
 # sync, async, mixed
 #
@@ -30,10 +30,12 @@ ds_names: ["iscsi_testing_1", "iscsi_testing_2"]
 
 # General settings
 filter_string: "ceph_"
-max_vms: 5
+max_vms: 6
 max_tasks: 10
 wait_for_health_ok_t: 360
 force_reboot: False
 max_down_osds_ratio: 0.2
 MAX_DEPTH: 15
 chaos_rate: 500
+#ceph_health_is_ok_with: 'HEALTH_WARN'
+ceph_health_is_ok_with: 'HEALTH_OK'

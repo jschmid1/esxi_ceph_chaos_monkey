@@ -74,9 +74,9 @@ class Runner(Config):
         if self.mode == 'mixed':
             log.warning(Fore.YELLOW + " * You are running in mixed mode. Tasks will be put in a queue up to 'max_queue' and are subsequently processed until the queue is empty ( UNDER DEVELOPMENT )")
 
-        #if not self.vmwareops.health_ok():
-        #    log.critical(Fore.RED + "Your vmwarecluster cluster is not in HEALTH_OK state.")
-        #    sys.exit(1)
+        if not self.vmwareops.health_ok():
+            log.critical(Fore.RED + "Your vmwarecluster cluster is not in HEALTH_OK state.")
+            sys.exit(1)
 
         if not self.cephops.health_ok(silent=False):
             log.critical(Fore.RED + "Your ceph cluster is not in HEALTH_OK state.")
@@ -125,7 +125,6 @@ class Runner(Config):
         # print summary
         print("Dummy method to collect logs")
 
-
     def stress_test(self):
         self.startup()
         abort = False
@@ -157,10 +156,10 @@ class Runner(Config):
             if seed in range(400,500):
                 log.info(Fore.RED + "Placeholder .. What to do more?")
 
-            # Check health
-#            if not self.cephops.wait_for_health_ok(silent=False):
-#                log.info(Fore.RED + "Health of Ceph is not ok, aborting")
-#                abort = True
+            if not self.cephops.wait_for_health_ok(silent=False):
+                log.info(Fore.RED + "Health of Ceph is not ok, aborting")
+                abort = True
+
             if not self.vmwareops.health_ok():
                 log.info(Fore.RED + "Health of VMWARE is not ok, aborting")
                 abort = True
@@ -168,6 +167,7 @@ class Runner(Config):
             
         if abort:
             self.teardown()
+
 def main():
     # For colorama
     init(autoreset=True)
@@ -177,7 +177,4 @@ def main():
     Runner().stress_test()
 
 if __name__ == '__main__':
-    thread = start_thread()
-    thread.start()
-    ## sooo this does not detatch..
     main()
