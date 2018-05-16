@@ -6,6 +6,7 @@ from __future__ import print_function
 import sys
 import random
 import logging
+import time
 # external modules
 from colorama import Fore, Style, init
 from pyVmomi import vim, vmodl
@@ -122,6 +123,7 @@ class Runner(Config):
 
     def copy_vmware_logs(self):
         # Refactor to one method
+        # move that to the config
         files = ['/var/log/vmkernel.log']
         timestamp = time.time()
         for host in self.esxi_hosts:
@@ -133,6 +135,7 @@ class Runner(Config):
 
     def copy_gateway_logs(self):
         # Refactor to one method
+        # move that to the config
         files = ['/var/log/messages']
         timestamp = time.time()
         for host in self.gateways:
