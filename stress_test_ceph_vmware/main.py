@@ -120,10 +120,31 @@ class Runner(Config):
                 break
             count -= 1
 
+    def copy_vmware_logs(self):
+        # Refactor to one method
+        files = ['/var/log/vmkernel.log']
+        timestamp = time.time()
+        for host in self.esxi_hosts:
+            log.info("Collecting logs from {}".format(host))
+            ssh = SshUtil(host, self.user, self.password)
+            for fn in files:
+                log.info("Collecting {}".format(fn))
+                ssh.copy_file_from_host(fn, 'logs/{}'.format(fn+timestamp))
+
+    def copy_gateway_logs(self):
+        # Refactor to one method
+        files = ['/var/log/messages']
+        timestamp = time.time()
+        for host in self.gateways:
+            log.info("Collecting logs from {}".format(host))
+            ssh = SshUtil(host, self.gateway_user, self.gateway_password)
+            for fn in files:
+                log.info("Collecting {}".format(fn))
+                ssh.copy_file_from_host(fn, 'logs/{}'.format(fn+timestamp))
+
     def teardown(self):
-        # collect logs
-        # print summary
-        print("Dummy method to collect logs")
+        self.copy_vmware_logs()
+        self.copy_gateway_logs()
 
     def stress_test(self):
         self.startup()

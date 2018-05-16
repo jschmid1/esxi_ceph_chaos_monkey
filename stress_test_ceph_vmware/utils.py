@@ -29,6 +29,10 @@ class SshUtil():
         else:
             log.info("Can't stage reboot with one gateway. This would cause a stall in all I/O and wouldn't test the inteded failover. If you still want to do that. You can set the force_reboot option to True")
         
+    def copy_file_from_host(self, source, dest):
+        sftp = self.clinet.sftp()
+        sftp.get(source, dest)
+        sftp.close()
 
 class Utils(object):
 
