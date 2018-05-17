@@ -38,13 +38,26 @@ For it to run you will need:
 Installation
 *****************
 
-python3 -m venv venv/
+Please make sure that you have installed:
 
-source venv/bin/activate
+python3-devel, make, gcc
 
-pip3 install -r requirements.txt
+before starting:
 
-python3 stress_test_vmware_ceph/main.py
+
+.. code-block:: shell
+
+    python3 -m venv venv/
+
+    source venv/bin/activate
+
+    pip3 install -r requirements.txt
+    
+Please read ahead before starting this tool with:
+
+.. code-block:: shell
+
+    python3 stress_test_vmware_ceph/main.py
 
 
 *****************
