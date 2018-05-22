@@ -169,9 +169,7 @@ class Runner(Config):
 
             if seed in range(300,320):
                 gateway = self.ops.random_gateway()
-                # Reboot in theory. but for now fake the call
-                #SshUtil(gateway, self.gateway_user, self.gateway_password, self.reboot_allowed).reboot()
-                log.info(Style.DIM + "This would reboot a gateway")
+                SshUtil(gateway, self.gateway_user, self.gateway_password, self.reboot_allowed).reboot()
 
             if seed in range(321,399):
                 random_osd = self.cephops.random_osd()
