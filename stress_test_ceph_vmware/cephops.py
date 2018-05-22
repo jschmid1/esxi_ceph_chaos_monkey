@@ -91,8 +91,10 @@ class CephOps(Config):
                 end = time.time()
                 log.info("Ceph's health is okay after {} seconds".format(round(end - start, 4)))
                 health_ok = True
+                break
             if time.time() > timeout:
                 health_ok = False
+                break
             time.sleep(5)
         return health_ok
 
