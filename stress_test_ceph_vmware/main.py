@@ -131,7 +131,7 @@ class Runner(Config):
             ssh = SshUtil(host, self.user, self.password)
             for fn in files:
                 log.info("Collecting {}".format(fn))
-                ssh.copy_file_from_host(fn, 'logs/{}'.format(fn+timestamp))
+                ssh.copy_file_from_host(fn, 'logs/{}'.format(fn+str(timestamp)))
 
     def copy_gateway_logs(self):
         # Refactor to one method
@@ -143,7 +143,7 @@ class Runner(Config):
             ssh = SshUtil(host, self.gateway_user, self.gateway_password)
             for fn in files:
                 log.info("Collecting {}".format(fn))
-                ssh.copy_file_from_host(fn, 'logs/{}'.format(fn+timestamp))
+                ssh.copy_file_from_host(fn, 'logs/{}'.format(fn+str(timestamp)))
 
     def teardown(self):
         self.copy_vmware_logs()
