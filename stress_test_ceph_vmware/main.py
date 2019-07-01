@@ -30,8 +30,8 @@ class Runner(Config):
         self.vmwareops = VMwareOps()
         self.ops.get_vm_list()
 
-        if len(self.gateways) < 2:
-            self.reboot_allowed = False
+        if len(self.gateways) >= 2:
+            self.reboot_allowed = True
         if self.force_reboot:
             self.reboot_allowed = True
 
@@ -103,7 +103,6 @@ class Runner(Config):
             while len(self.ops.vms) > self.max_vms:
                 log.info(Fore.YELLOW + "VM count rose over the configured threshold. Removing VMs")
                 self.destroy_vms(count=1)
-
         if self.cephops.osd_out_count > self.cephops.max_down_osds:
             log.info(Fore.YELLOW + "Down OSDs count dropped below the configured thereshold. Adding back in.")
             for osd_id in self.cephops.out_osds:

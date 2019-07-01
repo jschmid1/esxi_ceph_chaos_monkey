@@ -49,21 +49,21 @@ class CephOps(Config):
 
     def get_down_osds(self):
         data, _ = self.client.run_cmd('ceph osd tree -f json')
-        down_osds = []
+        self.down_osds = []
         for node_osd in ast.literal_eval(data)['nodes']:
             if node_osd.get('type') == 'osd' and 'osd' in node_osd.get('name'):
                 if node_osd.get('status') == 'down':
-                    down_osds.append(node_osd.get('id'))
-        return down_osds
+                    self.down_osds.append(node_osd.get('id'))
+        return self.down_osds
 
     def get_out_osds(self):
         data, _ = self.client.run_cmd('ceph osd tree -f json')
-        out_osds = []
+        self.out_osds = []
         for node_osd in ast.literal_eval(data)['nodes']:
             if node_osd.get('type') == 'osd' and 'osd' in node_osd.get('name'):
                 if node_osd.get('reweight') != 1.0:
-                    out_osds.append(node_osd.get('id'))
-        return out_osds
+                    self.out_osds.append(node_osd.get('id'))
+        return self.out_osds
 
     @property
     def max_down_osds(self):
